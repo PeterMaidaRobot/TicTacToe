@@ -2,8 +2,36 @@
     <head>
         <title>Tic Tac Toe</title>
         <meta charset="utf-8">
-    </head>
+
+        <link rel="stylesheet" href="style.css">
     <body>
         <h1>Hello World</h1>
+
+        <table>
+            <tr>
+                <td class="cell" id="0"></td>
+                <td class="cell" id="1"></td>
+                <td class="cell" id="2"></td>
+            </tr>
+            <tr>
+                <td class="cell" id="3"></td>
+                <td class="cell" id="4"></td>
+                <td class="cell" id="5"></td>
+            </tr>
+            <tr>
+                <td class="cell" id="6"></td>
+                <td class="cell" id="7"></td>
+                <td class="cell" id="8"></td>
+            </tr>
+        </table>
+
+        <div class="endgame">
+            <div class="text"></div>
+        </div>
+
+        <button onclick="startGame()">Ready</button>
+
+
+        <script src="scripts.js"></script>
     </body>
 </html>
