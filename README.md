@@ -1,2 +1,2 @@
-##TicTacToe
+## TicTacToe
 An introduction to ai
