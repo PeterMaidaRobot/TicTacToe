@@ -15,6 +15,8 @@ const winCombos = [
 const cells = document.querySelectorAll('.cell');
 startGame();
 
+// tutorial from: https://www.youtube.com/watch?v=P2TcQ3h0ipQ
+
 function startGame() {
     document.querySelector(".endgame").style.display = "none";
     origBoard = Array.from(Array(9).keys());
