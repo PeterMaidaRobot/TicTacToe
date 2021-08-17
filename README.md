@@ -5,9 +5,14 @@ An unbeatable tic-tac-toe ai can be found at:
 https://petermaidarobot-tictactoe.herokuapp.com/
 
 It can be beaten with:
-   | 2 |
- ----------
- 1 |   |
- ----------
+
+ o | 2 | o
+   
+///////////
+ 
+ 1 | o | o
+ 
+///////////
+ 
  4 | 5 | 3
 But it is bugged and will say "tie"
