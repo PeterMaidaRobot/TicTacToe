@@ -2,24 +2,27 @@ var origBoard;
 const huPlayer = 'X';
 const aiPlayer = 'O';
 const winCombos = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
+    [0, 1, 2], // first row
+    [3, 4, 5], // second row
+    [6, 7, 8], // third row
+    [0, 3, 6], // first col
+    [1, 4, 7], // second col
+    [2, 5, 8], // third col
+    [0, 4, 8], // diagnol \
+    [2, 4, 6]  // diagnol /
 ]
-
 const cells = document.querySelectorAll('.cell');
-startGame();
 
-// tutorial from: https://www.youtube.com/watch?v=P2TcQ3h0ipQ
+// Run the game
+newGame();
 
-function startGame() {
+/******************************************************************************/
+
+function newGame() {
+    // Initialize/Reset the board for a new game
     document.querySelector(".endgame").style.display = "none";
     origBoard = Array.from(Array(9).keys());
+
     for (let i = 0; i < cells.length; i++) {
         cells[i].innerText = '';
         cells[i].style.removeProperty('background-color');
@@ -30,7 +33,8 @@ function startGame() {
 function turnClick(square) {
     if (typeof origBoard[square.target.id] == 'number') {
         turn(square.target.id, huPlayer);
-        if (!checkTie()) {
+        // Check if the human didn't just win before the ai plays
+        if (!checkWin(origBoard, huPlayer)) {
             turn(bestSpot(), aiPlayer);
         }
     }
@@ -45,28 +49,48 @@ function turn(squareId, player) {
     }
 }
 
+// Check if the passed player won, return the win array
 function checkWin(board, player) {
+    // Grab all of the plays this player made
     let plays = board.reduce((a, e, i) =>
         (e === player) ? a.concat(i) : a, []);
+
     let gameWon = null;
-    for (let [index, win] of winCombos.entries()) {
-        if (win.every(elem => plays.indexOf(elem) > -1)) {
+    for (let [index, winCombo] of winCombos.entries()) {
+        // Check if this winCombo was met
+        if (winCombo.every(elem => plays.indexOf(elem) > -1)) {
             gameWon = {index: index, player: player};
             break;
         }
     }
+
+    if (!gameWon && emptySquares().length == 0) {
+        gameWon = {index: null, player: "Tie"};
+    }
+
     return gameWon;
 }
 
 function gameOver(gameWon) {
-    for (let index of winCombos[gameWon.index]) {
-        document.getElementById(index).style.backgroundColor =
-            gameWon.player == huPlayer ? "blue" : "red";
+    if (gameWon.player == "Tie") {
+        // Color the entire board on a tie
+        for (let i = 0; i < cells.length; i++) {
+            cells[i].style.backgroundColor = "green";
+            cells[i].removeEventListener('click', turnClick, false);
+        }
+        declareWinner("Tie game!");
+    } else {
+        // Color the player's line that won
+        for (let index of winCombos[gameWon.index]) {
+            document.getElementById(index).style.backgroundColor =
+                gameWon.player == huPlayer ? "blue" : "red";
+        }
+        declareWinner(gameWon.player == huPlayer ? "You win!" : "You lose!");
     }
+    // Disable all of the cell actions
     for (let i = 0; i < cells.length; i++) {
         cells[i].removeEventListener('click', turnClick, false);
     }
-    declareWinner(gameWon == huPlayer ? "You win!" : "You lose!");
 }
 
 function declareWinner(who) {
@@ -82,25 +106,16 @@ function bestSpot() {
     return minimax(origBoard, aiPlayer).index;
 }
 
-function checkTie() {
-    if (emptySquares().length == 0) {
-        for (let i = 0; i < cells.length; i++) {
-            cells[i].style.backgroundColor = "green";
-            cells[i].removeEventListener('click', turnClick, false);
-        }
-        declareWinner("Tie Game!");
-        return true;
-    }
-    return false;
-}
-
 function minimax(newBoard, player) {
     let availSpots = emptySquares(newBoard);
 
-    if (checkWin(newBoard, player)) {
+    let humanWon = checkWin(newBoard, huPlayer);
+    let aiWon = checkWin(newBoard, aiPlayer);
+
+    if (humanWon && humanWon.player == huPlayer) {
         return {score: -10};
-    } else if (checkWin(newBoard, aiPlayer)) {
-        return {score: 20};
+    } else if (aiWon && aiWon.player == aiPlayer) {
+        return {score: 10};
     } else if (availSpots.length === 0) {
         return {score: 0};
     }
@@ -126,7 +141,7 @@ function minimax(newBoard, player) {
     let bestMove;
     if (player === aiPlayer) {
         let bestScore = -10000;
-        for (let i = 0; i <moves.length; i++) {
+        for (let i = 0; i < moves.length; i++) {
             if (moves[i].score > bestScore) {
                 bestScore = moves[i].score;
                 bestMove = i;
