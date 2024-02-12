@@ -15,23 +15,26 @@ your local computer with "npm start" and then navigate to 127.0.0.1:8080 in a br
 
 Tutorial from: https://www.youtube.com/watch?v=P2TcQ3h0ipQ
 
-But this one could be beaten with:
+But this one could be beaten with (spare header line at top for git markdown parser):
+|   |   |   |
+|---|---|---|
 |   | 2 |   |
- ----------
 | 1 |   |   |
- ----------
 | 4 | 5 | 3 |
+
  or
+ 
+|   |   |   |
+|---|---|---|
 | 1 |   | 4 |
-----------
 |   |   | 5 |
-----------
 |   | 3 | 2 |
+
 and it's bugged and will say "tie"
 
 It also will prevent this win instead of winning itself:
-| 1 |   | 2 |
- ----------
 |   |   |   |
- ----------
+|---|---|---|
+| 1 |   | 2 |
+|   |   |   |
 |   |   | 3 |
